@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --board-size: 200px;
+}
+body {
+  background-color: pink;
+}
+body > p:nth-child(3) {
+  font-size: 1.6rem;
+}
+img {
+  background-color: lightblue;
+  font-style: italic;
+  width: 100%;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: var(--board-size);
+  justify-content: center;
+  gap: 10px 6px;
+}
+
+.board > article {
+  background-color: ghostwhite;
+  box-sizing: border-box;
+  padding: 0 10px 20px;
+  border-radius: 20px;
+  height: 300px;
+  display: grid;
+  grid-template-rows: 1fr 2fr 1fr 1fr;
+  > p {
+    padding: 0 10px;
+  }
+}
+.board img {
+  aspect-ratio: 9/5;
+  object-fit: cover;
+}
+
+@media (min-width: 470px) {
+  body {
+    background-color: powderblue;
+  }
+  .board {
+    grid-template-columns: repeat(auto-fill, var(--board-size));
+  }
+}
+@media (min-width: 1200px) {
+  .board {
+    grid-template-columns: repeat(8, var(--board-size));
+  }
+}
+/*
+@media (min-width: 480px) and (max-width: 768px) {
+  body {
+    background-color: lightgreen;
+    > p:nth-child(3) { font-weight: bold; font-size: 2rem; }
+  }
+}
+*/
+</style>
+</head>
+<body onresize="myFunk()">
+
+<h1>Resize the browser window to see the effect!</h1>
+
+<p>The media query is applied if the media type is screen, and the viewport width is between 480px and 768px.</p>
+<p></p>
+<section class="board"></section>
+
+</body>
+<script>
+  const boards = [
+    {
+      boardId: "f17be175-f396-47bc-8051-e424c29c1e14",
+      image: { url: "_.png", alt: "Cinderella makes food"},
+      dialogue: "",
+      action: "Cinderella making food in the kitchen.",
+      background: "Kitchen",
+      characters: ["Cinderella"]
+    },
+    {
+      boardId: "67438912-94cb-4e6f-8119-1918ee6558da",
+      image: { url: "_.png", alt: "Dinnerscene with Stepmother and sisters" },
+      dialogue: `Step-sister 1: "Good enough, Cindy!"`,
+      action: "Cinderella making food in the kitchen.",
+      background: "Dinner room",
+      characters: ["Step-mother", "Step-sister 1", "Step-sister 2"]
+    },
+    {
+      boardId: "f17be175-f396-47bc-8051-e424c29c1e14",
+      image: { url: "_.png", alt: "Cinderella makes food"},
+      dialogue: "",
+      action: "Cinderella making food in the kitchen.",
+      background: "Kitchen",
+      characters: ["Cinderella"]
+    }
+  ];
+  
+  Object.values( document. getElementsByClassName( "board") )
+    .map(board => {
+      board.innerHTML = boards.map((hero,i) => `
+      <article>
+        <p>board #${i + 1}</p>
+        <img src="${hero.image.url}"
+          alt="${hero.image.alt}">
+        <p>${hero.dialogue.length === 0 ? "--" : hero.dialogue}</p>
+        <p>${hero.action}</p>
+      </article>`
+    ).join("") + Array.from({length: 9 - boards.length}, (a,i) => `<article>${i + boards.length + 1}</article>`);}).join("");
+  
+  function myFunk() {
+    document.getElementsByTagName("p")[1].innerHTML = window.innerWidth + "px";
+  }
+</script>
+</html>
+
+
