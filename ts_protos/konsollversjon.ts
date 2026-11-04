@@ -78,15 +78,15 @@ class User implements IdHaver {
         [0].drawings.push(...drawings);
     }
 
-    createNewDrawings(imgString: string): Drawing[] {
-        if (!(/.jpeg|\.png/g).exec(imgString)) return [];
-        return [{
+    createNewDrawings(imgStrings: { img: string, dialogue?: string }[]): Drawing[] {
+        //if (!(/.jpeg|\.png/g).exec(imgString)) return [];
+        return imgStrings.map(imgString => ({
             id: this.createId(),
-            content: imgString,
+            content: imgString.img,
             dateMade: new Date().toLocaleString(),
             dateUpdated: new Date().toLocaleString(),
-            dialogue: ""
-        }]
+            dialogue: imgString.dialogue ?? ""
+        }));
     }
 
     private createId() {
@@ -112,7 +112,10 @@ const newScene: Scene = bruker.createNewScene();
 
 const newShot: Shot = bruker.createNewShot();
 
-const newDrawings: Drawing[] = bruker.createNewDrawings("tegningABC.png");
+const newDrawings: Drawing[] = bruker.createNewDrawings([
+    { img: "tegningABC.png", dialogue: "Er du en elg?" },
+    { img: "tegningEFG.png" }
+]);
 
 newShot.drawings = [...newShot.drawings, ...newDrawings];
 newScene.shots = [...newScene.shots, newShot];
