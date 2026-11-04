@@ -40,13 +40,20 @@ class User implements IdHaver {
         this.storyboards = storyboards ?? [];
     }
 
-    createNewStoryboard(title: string, summary: string) {
+    updateStoryboard(id: string, scene: Scene) {
+        const selectedStoryboard = this.storyboards.filter(storyboard => storyboard.id === id)[0];
+
+        selectedStoryboard.scenes = [...selectedStoryboard.scenes, scene];
+        selectedStoryboard.dateUpdated = new Date().toLocaleString();
+    }
+
+    createNewStoryboard(title: string, summary?: string) {
         const newBoard: Storyboard = {
             id: this.createId(),
             dateMade: new Date().toLocaleString(),
             dateUpdated: new Date().toLocaleString(),
             title: title,
-            summary: summary,
+            summary: summary ?? "",
             scenes: []
         }
         this.storyboards = [...this.storyboards, newBoard];
@@ -118,13 +125,13 @@ const newDrawings: Drawing[] = bruker.createNewDrawings([
 ]);
 
 newShot.drawings = [...newShot.drawings, ...newDrawings];
+newShot.description = "MOOSE enters clearing; a BIRD asks her a question.";
 newScene.shots = [...newScene.shots, newShot];
 
 const selectedId = bruker.storyboards[0].id;
 
-const selectedStoryboard = bruker.storyboards.filter(storyboard => storyboard.id === selectedId)[0];
-
-selectedStoryboard.scenes = [...selectedStoryboard.scenes, newScene];
+bruker.updateStoryboard(selectedId, bruker.createNewScene());
+bruker.updateStoryboard(selectedId, newScene);
 
 console.clear();
 console.log(bruker)
