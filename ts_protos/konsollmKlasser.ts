@@ -32,8 +32,21 @@ abstract class BaseClass {
 }
 
 class Drawing extends BaseClass {
-    constructor() {
+    dialogue: null | string;
+    action: null | string;
+    img: string;
+    constructor(img: string) {
         super();
+        this.dialogue = null;
+        this.action = null;
+        this.img = img ?? "";
+    }
+    editDrawing() {
+        return {
+            action: (act: string) => { this.action = act; },
+            dialogue: (dialog: string) => { this.dialogue = dialog; },
+            image: (img: string) => { this.img = img; }
+        }
     }
 }
 class Shot extends BaseClass {
@@ -41,6 +54,9 @@ class Shot extends BaseClass {
     constructor() {
         super();
         this.drawings = [];
+    }
+    addDrawings(...drawing: Drawing[]) {
+        this.drawings.push(...drawing);
     }
 }
 class Scene extends BaseClass {
@@ -61,7 +77,7 @@ class Storyboard extends BaseClass {
 }
 
 class User extends BaseClass {
-    storyboards : Storyboard[];
+    storyboards: Storyboard[];
     constructor(id?: string, dateMade?: string, storyboards?: Storyboard[]) {
         super();
         this.identity = {
@@ -70,5 +86,19 @@ class User extends BaseClass {
             dateUpdated: null
         };
         this.storyboards = storyboards ?? [];
+    }
+    addStoryboard(...storyboards: Storyboard[]) {
+        this.storyboards.push(...storyboards);
+    }
+    addSceneToStoryboard(storyboardId: string) {
+        return (sceneId: string) => {
+            this.storyboards.filter(storyboard =>
+                storyboard.identity.id === storyboardId
+            )[0].scenes.push(
+                this.storyboards.flatMap(
+                    storyboard => storyboard.scenes
+                ).filter(scene => scene.identity.id === sceneId)[0]
+            )
+        }
     }
 }
